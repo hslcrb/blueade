@@ -15,7 +15,7 @@
 
 | 구분 | 상태 |
 | --- | --- |
-| `dist/app.asar` | **생성 성공**, 1,968,321 bytes |
+| `dist/app.asar` | **생성 성공**, 1,968,397 bytes |
 | ASAR 포함 파일 | **177/177 SHA256 확인** |
 | Node 기능·패키징 검사 | **8/8 통과** |
 | 앱 번들 SHA256 | `643bf1c8b1b63d1b5fe4b9989b28b588c21d7da1f0d032ca1fedf48fc2c4afce` |
