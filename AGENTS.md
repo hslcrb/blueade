@@ -25,6 +25,6 @@ Single-window operation center; clear Korean labels; accessible keyboard support
 - [ ] Changed files scoped and logically separated
 - [ ] UI labels and progress deterministic
 - [ ] No secrets, node_modules or font redistribution
-- [ ] PR reviewers assigned / status checks green
+- [ ] PR reviewers assigned / status checks green (CI가 주석으로 중단된 동안은 미충족으로 기록하고 자동 병합 금지)
 - [ ] Pushes verified against remote branch
 - [ ] No false claim of Windows binary or release
