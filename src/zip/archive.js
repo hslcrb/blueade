@@ -11,17 +11,33 @@ const {LIMITS, normalizeEntry, safeInside, assertNoSymlinkParents, assertArchive
 
 function failIfAborted(signal) {if (signal?.aborted) throw Object.assign(new Error('작업을 취소했습니다.'), {name: 'AbortError'});}
 function fileSize(file) {return file._data?.uncompressedSize || 0;}
+const CRC_TABLE = Uint32Array.from({length:256}, (_,i) => {
+  let v=i;
+  for(let j=0;j<8;j++) v=(v&1)?(0xEDB88320^(v>>>1)):(v>>>1);
+  return v>>>0;
+});
+function crc32Update(crc, bytes){
+  for(const byte of bytes) crc=CRC_TABLE[(crc^byte)&0xff]^(crc>>>8);
+  return crc>>>0;
+}
+function checkCRC(file, crc){
+  const actual=(crc^0xffffffff)>>>0;
+  const expected=(file._data?.crc32??0)>>>0;
+  if(actual!==expected) throw new Error(`CRC 검사 실패: ${file.name}`);
+}
+
 function report(fn, data) {if (fn) fn(data);}
 function presentEntry(file) {
   return {name: file.name, directory: file.dir, size: fileSize(file), modified: file.date instanceof Date ? file.date.toISOString() : null};
 }
-async function loadArchive(filename, {checkCRC32 = false} = {}) {
+async function loadArchive(filename) {
   const absolute = path.resolve(filename);
   if (path.extname(absolute).toLowerCase() !== '.zip') throw new Error('현재는 ZIP 압축 파일을 지원합니다.');
   const stat = await fs.stat(absolute);
   if (!stat.isFile() || stat.size > LIMITS.archiveBytes) throw new Error('지원하지 않는 파일이거나 1GiB를 초과합니다.');
   const data = await fs.readFile(absolute);
-  const zip = await JSZip.loadAsync(data, {checkCRC32, createFolders:false});
+  // Preflight metadata BEFORE decompressing any entry to avoid a CRC zip-bomb.
+  const zip = await JSZip.loadAsync(data, {checkCRC32:false, createFolders:false});
   const files = Object.values(zip.files);
   const total = assertArchiveLimits(files);
   return {zip, files, total, compressedBytes:stat.size};
@@ -104,7 +120,7 @@ async function extract({archive, destination, selected=[]}, update, signal) {
   await fs.mkdir(root,{recursive:true});
   const rootStat = await fs.lstat(root);
   if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) throw new Error('압축 해제 경로가 안전한 폴더가 아닙니다.');
-  const {files} = await loadArchive(archive, {checkCRC32:true});
+  const {files} = await loadArchive(archive);
   const selectedSet = Array.isArray(selected) && selected.length ? new Set(selected) : null;
   const chosen = files.filter(f=>!selectedSet || [...selectedSet].some(name=>f.name === name || f.name.startsWith(name.endsWith('/')?name:name+'/')));
   const fileEntries = chosen.filter(f=>!f.dir);
@@ -126,15 +142,18 @@ async function extract({archive, destination, selected=[]}, update, signal) {
       const readable = file.nodeStream('nodebuffer');
       const writable = createWriteStream(temp,{flags:'wx'});
       let size = 0;
+      let crc=0xffffffff;
       try {
         readable.on('data', chunk => {
           size += chunk.length;
-          if (size > LIMITS.entryBytes) readable.destroy(new Error('항목 용량 제한 초과'));
+          crc=crc32Update(crc,chunk);
+          if (size > LIMITS.entryBytes || processedBytes + size > LIMITS.totalBytes) readable.destroy(new Error('항목 용량 제한 초과'));
           const current = processedBytes + size;
           report(update,{percent:totalBytes?Math.min(99,Math.round(current/totalBytes*100)):99,processedBytes:current,totalBytes,currentFile:name,fileIndex:index+1,fileCount:fileEntries.length});
         });
         await pipeline(readable,writable,{signal});
         failIfAborted(signal);
+        checkCRC(file,crc);
         // Atomic no-clobber publish. Existing user files are never removed.
         await fs.link(temp,target);
         created.push(target);
@@ -161,16 +180,18 @@ async function verifyArchive(archive, update, signal) {
   for (const file of regular) {
     failIfAborted(signal);
     const stream = file.nodeStream('nodebuffer');
+    let crc=0xffffffff;
     stream.on('data', chunk=>{
+      crc=crc32Update(crc,chunk);
+      if(processedBytes+chunk.length>LIMITS.totalBytes)stream.destroy(new Error('검사 용량 제한 초과'));
       processedBytes+=chunk.length;
       report(update,{percent:total?Math.min(99,Math.round(processedBytes/total*100)):99,processedBytes,totalBytes:total,currentFile:file.name,fileIndex:fileIndex+1,fileCount:regular.length});
     });
     await pipeline(stream,new Writable({write(_chunk,_encoding,callback){if (signal?.aborted) callback(Object.assign(new Error('작업을 취소했습니다.'),{name:'AbortError'})); else callback();}}),{signal});
-    // JSZip verifies CRC on loadAsync(checkCRC32:true); call once after streaming below.
+    checkCRC(file,crc);
     fileIndex++;
   }
   failIfAborted(signal);
-  await loadArchive(archive,{checkCRC32:true});
   report(update,{percent:100,processedBytes,totalBytes:total,fileIndex,fileCount:regular.length});
   return {fileCount:regular.length,totalBytes:total};
 }
