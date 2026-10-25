@@ -102,3 +102,7 @@ Bluade의 오픈소스 이니셔티브는 **Human × Agent**입니다.
 MIT License. Contributions are welcome! 💙
 
 <div align="center"><i>From tangled archives to clearer days. — Bluade ✦</i></div>
+
+### 직접 패키징 / Offline application bundle
+
+Node와 이미 설치된 의존성만으로 `npm run build:asar`를 실행하면 모든 파일을 SHA-256 검증한 `dist/app.asar`가 만들어집니다. 이는 **Electron 앱 번들이며 Windows EXE는 아닙니다.** 공식 Electron Windows 런타임을 SHA-256 검사한 뒤 조립하는 PowerShell 도구와 상태 보고는 [로컬 패키징 가이드](docs/OFFLINE_ELECTRON_BUNDLE.md)를 확인하세요.
