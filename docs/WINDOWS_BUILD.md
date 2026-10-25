@@ -37,3 +37,7 @@ CI `.github/workflows/ci.yml`은 **2026-10-25 유지관리자 요청으로 전 �
 ## Dependency-free local Electron app bundle / 오프라인 중간 빌드
 
 `npm run build:asar` creates a fully verified `dist/app.asar` from already-installed runtime dependencies using Node's built-in modules, with no remote CI. It is **not** a Windows executable. See [direct packaging and verified Electron runtime assembly](OFFLINE_ELECTRON_BUNDLE.md). On Windows, `scripts/assemble-win32.ps1 -DownloadElectron` checks the official Electron 45.0.0 runtime's SHA-256 before assembling a portable `Bluade.exe` folder. This second stage cannot complete in the current network-isolated Linux environment.
+
+## Linux에서 Wine 없이 공식 Electron ZIP 조립
+
+네트워크를 통한 의존성 설치 없이도, 공식 Windows Electron ZIP 파일만 제공되면 이 Linux 환경에서 `npm run build:win:portable:local`로 `Bluade.exe` 및 전체 배포 폴더를 조립할 수 있습니다. 필수 ZIP 크기·SHA256을 검사하고 경로를 검증합니다. 자세한 사항은 [오프라인 가이드](OFFLINE_ELECTRON_BUNDLE.md)를 참고하세요. **이번 세션에는 공식 ZIP이 없어 실행 가능한 EXE 생성은 이루어지지 않았습니다.**
