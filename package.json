@@ -22,7 +22,8 @@
     "dist:win": "electron-builder --win nsis zip --x64 --publish never",
     "dist:win:portable": "electron-builder --win zip --x64 --publish never",
     "build:asar": "node scripts/build-offline-asar.cjs",
-    "build:win:portable:manual": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/assemble-win32.ps1 -DownloadElectron"
+    "build:win:portable:manual": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/assemble-win32.ps1 -DownloadElectron",
+    "build:win:portable:local": "node scripts/assemble-win32-from-zip.cjs"
   },
   "dependencies": {
     "jszip": "3.10.1"

@@ -15,10 +15,10 @@
 
 | 구분 | 상태 |
 | --- | --- |
-| `dist/app.asar` | **생성 성공**, 1,968,321 bytes |
+| `dist/app.asar` | **생성 성공**, 1,968,397 bytes |
 | ASAR 포함 파일 | **177/177 SHA256 확인** |
-| Node 기능·패키징 검사 | **7/7 통과** |
-| 앱 번들 SHA256 | `de7194ffa6d19703ed0803e136e93356c2039a3c5ac1026899d5d02e39006aac` |
+| Node 기능·패키징 검사 | **8/8 통과** |
+| 앱 번들 SHA256 | `643bf1c8b1b63d1b5fe4b9989b28b588c21d7da1f0d032ca1fedf48fc2c4afce` |
 | Windows 설치 EXE/포터블 EXE | **미생성** |
 | Windows Electron 실제 실행 테스트 | **미수행** |
 
@@ -43,3 +43,9 @@ npm run build:asar
 Windows에서 공식 Electron 런타임을 설치 없이 검증·조립하는 방법은 [OFFLINE_ELECTRON_BUNDLE.md](OFFLINE_ELECTRON_BUNDLE.md)를 참조하세요. 이 문서는 **성공하지 않은 Windows EXE를 업로드했다고 주장하지 않기 위한** 증빙입니다.
 
 GitHub Releases에 바이너리를 업로드하려면 실제 바이너리와 Release 생성·업로드 권한이 필요하며, 현 연결된 GitHub 도구에는 해당 바이너리 업로드 기능이 제공되지 않습니다.
+
+## Linux 순수 조립 경로 추가
+
+- `scripts/assemble-win32-from-zip.cjs`: **Wine·electron-builder 없이도** 공식 Electron Windows ZIP + 본 환경에서 빌드한 `app.asar`만 있으면 `Bluade.exe`를 조립하도록 구현했습니다.
+- `test/offline-runtime.test.js`: 공식 ZIP이 없거나 잘못된 크기일 경우 산출 디렉터리를 만들지 않고 실패하는 테스트. 총 **8/8 통과**.
+- 실제 조립 실패 원인은 Electron ZIP `dist/electron-v45.0.0-win32-x64.zip`의 부재입니다. 다운로드 서버 DNS 실패로 이 세션에서 확보하지 못했습니다. **EXE/설치파일이 생성됐다는 의미가 아닙니다.**
