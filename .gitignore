@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.zip
+*.exe
+*.7z
+*.part
+!test/fixtures/*.zip
+assets/fonts/custom.*
