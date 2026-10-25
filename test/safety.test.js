@@ -45,3 +45,19 @@ test('abort before creating archive',async()=>{
  const c=new AbortController();c.abort();
  await assert.rejects(()=>compress({sources:['nope'],destination:'/tmp/nope.zip'},null,c.signal),{name:'AbortError'});
 });
+test('detect tampered ZIP CRC without leaving a partially extracted file',async()=>{
+ const d=await fs.mkdtemp(path.join(os.tmpdir(),'blueade-corrupt-'));
+ try{
+  const source=path.join(d,'origin.txt');const archive=path.join(d,'crc.zip');const dest=path.join(d,'out');
+  await fs.writeFile(source,'important data ♡');
+  await compress({sources:[source],destination:archive});
+  const data=await fs.readFile(archive);
+  const pos=data.indexOf(Buffer.from([0x50,0x4b,0x01,0x02]));
+  assert.ok(pos>=0);
+  data.writeUInt32LE((data.readUInt32LE(pos+16)^1)>>>0,pos+16);
+  await fs.writeFile(archive,data);
+  await assert.rejects(()=>verifyArchive(archive),/CRC/);
+  await assert.rejects(()=>extract({archive,destination:dest}),/CRC/);
+  await assert.rejects(()=>fs.stat(path.join(dest,'origin.txt')),{code:'ENOENT'});
+ }finally{await fs.rm(d,{recursive:true,force:true});}
+});
