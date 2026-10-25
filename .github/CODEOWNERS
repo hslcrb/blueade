@@ -1,0 +1,4 @@
+# Maintainer review is required for the security boundary and automation.
+* @hslcrb
+/src/zip/ @hslcrb
+/.github/workflows/ @hslcrb

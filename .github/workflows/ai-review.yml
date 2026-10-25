@@ -1,0 +1,28 @@
+name: AI review
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  statuses: write
+jobs:
+  review:
+    name: Optional AI reviewer
+    runs-on: ubuntu-latest
+    # Review trusted default-branch script only. NEVER check out/run PR code.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: AI review — fail closed without an API key
+        run: node scripts/ai-review.cjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BLUADE_AI_REVIEW_KEY: ${{ secrets.BLUADE_AI_REVIEW_KEY }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
