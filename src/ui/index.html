@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';" />
+  <meta name="theme-color" content="#f6f8fd" />
+  <title>Bluade — 압축을 맑게</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div class="shell" id="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 44 44" fill="none"><path d="M9 6h17c8 0 12 4 12 10 0 4-2 7-6 9 5 2 7 5 7 9 0 7-5 10-13 10H9V6Z" fill="white" fill-opacity=".18"/><path d="M14 9h12c6 0 10 3 10 8 0 4-2 6-6 8 5 1 7 4 7 8 0 6-4 9-12 9H14V9Zm9 7v6h3c2 0 3-1 3-3s-1-3-3-3h-3Zm0 13v6h3c3 0 4-1 4-3s-2-3-4-3h-3Z" fill="white"/><path d="m6 30 16-18-4 13h11L11 43l5-13H6Z" fill="#B8F3FF"/></svg></div>
+      <div class="brand-name"><strong>Bluade<span>.</span></strong><small>압축을 맑게, 작업은 가볍게</small></div>
+    </div>
+    <nav class="view-tabs" aria-label="작업 영역">
+      <button class="tab active" type="button" data-mode="browse" aria-current="page">압축 탐색</button>
+      <button class="tab" type="button" data-mode="create">새 압축</button>
+      <button class="tab" type="button" data-mode="history">작업 기록</button>
+    </nav>
+    <div class="top-tools"><span class="secure"><span class="secure-dot"></span> 내 PC에서만 처리</span><span class="version">v0.1.0</span></div>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div><span class="eyebrow"><span class="sparkle">✦</span> THE CLEAR ARCHIVE EXPERIENCE</span><h1 id="hero-title">압축의 모든 순간을, <em>선명하게.</em></h1><p>열고 · 정리하고 · 확인하는 모든 과정이 한 화면에 머뭅니다.</p></div>
+    <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-glyph">B</div><span class="hero-star star-a">✧</span><span class="hero-star star-b">✦</span></div>
+  </section>
+
+  <section class="actions" aria-label="압축 작업 도구">
+    <button type="button" class="tool primary" id="open-archive"><span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M3 11h18"/></svg></span><span>압축파일 열기<small>ZIP 탐색</small></span></button>
+    <button type="button" class="tool" id="add-files"><span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/></svg></span><span>파일 추가<small>여러 파일 선택</small></span></button>
+    <button type="button" class="tool" id="add-folder"><span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h7l2 3h9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z"/><path d="M15 12v6m-3-3h6"/></svg></span><span>폴더 추가<small>통째로 압축</small></span></button>
+    <div class="action-divider"></div>
+    <button type="button" class="tool" id="extract-action"><span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5"/><path d="M4 17v3h16v-3"/></svg></span><span>압축 풀기<small>안전한 해제</small></span></button>
+    <button type="button" class="tool" id="verify-action"><span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22s9-4.5 9-11V5l-9-3-9 3v6c0 6.5 9 11 9 11Z"/><path d="m8 12 3 3 5-6"/></svg></span><span>파일 검사<small>CRC 검증</small></span></button>
+    <div class="actions-fill"></div><span class="shortcut-hint">TIP <kbd>Ctrl</kbd> + <kbd>O</kbd> 파일 열기</span>
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="폴더 탐색기">
+      <div class="side-heading">MY WORKSPACE <button id="clear-workspace" class="quiet" type="button" title="작업 공간 초기화" aria-label="작업 공간 초기화">↺</button></div>
+      <button class="side-link active" type="button" id="side-browse"><span class="side-emoji">▦</span> 현재 작업 <span class="side-count" id="side-count">0</span></button>
+      <button class="side-link" type="button" id="side-create"><span class="side-emoji">⊞</span> 새 압축 만들기</button>
+      <button class="side-link" type="button" id="side-history"><span class="side-emoji">◷</span> 최근 작업</button>
+      <div class="side-section"><span>압축파일 구조</span><span class="side-subtitle">ZIP</span></div>
+      <div class="folder-tree" id="folder-tree"><div class="tree-empty">압축파일을 열면<br />폴더 구조가 표시돼요.</div></div>
+      <div class="side-bottom"><span class="mini-symbol">✳</span><div><strong>조금 더 안전하게</strong><small>경로 검증 · 덮어쓰기 방지</small></div></div>
+    </aside>
+
+    <section class="explorer" aria-labelledby="explorer-title">
+      <div class="explorer-head"><div><span class="section-kicker" id="section-kicker">ARCHIVE EXPLORER</span><h2 id="explorer-title">내 압축 작업</h2></div><div class="header-counter" id="file-summary">0개 항목</div></div>
+      <div class="pathbar"><div class="breadcrumbs" id="breadcrumbs"><span class="root-crumb">⌂</span><span>작업 공간</span></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="파일 이름 검색" aria-label="파일 이름 검색" /></label></div>
+      <div class="workspace-banner" id="workspace-banner" hidden></div>
+      <div class="table-head"><span>이름</span><span>크기</span><span>유형</span><span>수정 일시</span></div>
+      <div class="file-viewport" id="file-viewport" tabindex="0" aria-label="파일 목록">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-illustration" aria-hidden="true"><div class="empty-fold"><svg viewBox="0 0 100 80"><path d="M9 23a9 9 0 0 1 9-9h27l10 11h27a9 9 0 0 1 9 9v34a9 9 0 0 1-9 9H18a9 9 0 0 1-9-9V23Z" fill="#C4DBFF"/><path d="M9 38a9 9 0 0 1 9-9h64a9 9 0 0 1 9 9v30a9 9 0 0 1-9 9H18a9 9 0 0 1-9-9V38Z" fill="#4E87F0"/><path d="M57 5v26M44 18h26" stroke="#2759BB" stroke-width="6" stroke-linecap="round"/></svg></div><span class="float-spark s1">✦</span><span class="float-spark s2">✧</span></div>
+          <h3>여기서부터 시작해 볼까요?</h3><p>ZIP 파일을 열거나 파일을 추가하세요.<br />드래그 앤 드롭도 지원해요.</p><button type="button" id="empty-open">압축파일 열어보기 <span>→</span></button>
+        </div>
+        <div id="file-list" class="file-list" role="listbox" aria-label="압축 항목" aria-multiselectable="true"></div>
+      </div>
+      <div class="explorer-footer"><span id="selection-info">아직 선택한 항목이 없어요</span><span id="archive-size">ZIP · 로컬 처리</span></div>
+    </section>
+
+    <aside class="task-panel" aria-label="작업 센터">
+      <div class="task-heading"><div><span class="section-kicker">LIVE PROCESS</span><h2>작업 센터 <span class="live-dot"></span></h2></div><span class="task-label" id="job-badge">대기 중</span></div>
+      <div class="task-description" id="job-description">압축을 시작하면 이곳에서<br />진행 상황을 상세하게 확인할 수 있어요.</div>
+      <div class="progress-card"><div class="progress-row"><strong id="job-title">작업 준비 완료</strong><span class="percent" id="job-percent">0%</span></div><div class="progress-track" id="progress-track" role="progressbar" aria-label="압축 작업 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div><div class="filename-row"><span>현재 파일</span><b id="job-current">대기 중</b></div>
+        <div class="metric-grid"><div><span>처리한 데이터</span><strong id="job-processed">0 B</strong></div><div><span>처리 속도</span><strong id="job-speed">—</strong></div><div><span>남은 시간</span><strong id="job-eta">—</strong></div><div><span>완료한 파일</span><strong id="job-count">0 / 0</strong></div></div>
+        <button type="button" id="cancel-job" class="outline-action" disabled>작업 취소</button><button type="button" id="reveal-output" class="outline-action reveal-action" hidden>결과 폴더 열기 ↗</button>
+      </div>
+      <div class="inline-options"><div class="option-row"><strong id="operation-label">해제 경로</strong><button type="button" id="choose-path" class="small-link">폴더 선택 ↗</button></div><p id="target-path">폴더를 선택하지 않았습니다.</p><div class="option-row setting-row"><label for="compression-level">압축 강도</label><select id="compression-level" aria-label="압축 수준"><option value="1">빠르게</option><option value="3">가볍게</option><option value="6" selected>균형 있게</option><option value="9">최대한</option></select></div><button type="button" class="run-action" id="start-operation" disabled>작업 시작 <span>→</span></button></div>
+      <div class="activity-head"><strong>작업 로그</strong><span id="activity-count">0 EVENTS</span></div><div class="activity-log" id="activity-log" aria-live="polite"><div class="log-row"><span class="log-dot"></span><span>아직 작업 내역이 없어요.</span></div></div>
+      <div class="ad-slot" aria-label="광고 영역"><div class="ad-mark">ADVERTISEMENT · AD SPACE</div><div class="ad-orb"></div><div class="ad-copy">이곳은<br />광고입니다<span class="ad-period">.</span></div><div class="ad-bottom">Bluade는 광고 콘텐츠를 포함하지 않습니다. <span>✧</span></div></div>
+    </aside>
+  </main>
+  <footer class="statusbar"><span><span class="online-dot"></span> BLUADE ENGINE <span class="status-dot">·</span> 로컬 및 오프라인</span><span id="global-status" role="status" aria-live="polite">어서 오세요! 당신의 파일은 당신의 기기에 머뭅니다.</span><span>Made for humans <span class="heart">♥</span> and agents</span></footer>
+  <div id="drop-overlay" class="drop-overlay" hidden><div><strong>파일을 놓아주세요 ✦</strong><p>ZIP은 열고, 다른 파일은 새 압축에 추가해요.</p></div></div>
+</div>
+</body>
+</html>
