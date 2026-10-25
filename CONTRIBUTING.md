@@ -19,7 +19,7 @@ Bluade welcomes people and agents who can explain *why* a change is useful, how 
 
 ## Review & automated merge
 
-1. CI and Windows build checks must succeed.
+1. 정상 운영 시 CI와 Windows 빌드가 통과해야 합니다. **2026-10-25부터 CI는 전체 주석 처리되어 일시 중단**되었으므로 자동 병합은 실패-차단됩니다. CI 복원 전에는 검증 통과로 표시하지 않으며, 수동 테스트 증거와 미충족 항목을 PR에 명시합니다.
 2. Optional AI reviewer is **configured only if the repository maintainer provides a secret** `BLUADE_AI_REVIEW_KEY`. It produces a visible comment and `ai-reviewed` label on success, but **never counts as human approval**.
 3. Require at least one approval by a human collaborator with write access, no active `CHANGES_REQUESTED`, and no merge conflicts.
 4. A maintainer applies `safe-to-merge` only after review.
