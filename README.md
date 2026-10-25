@@ -6,7 +6,7 @@
 
 **파일을 열고, 압축하고, 풀고, 검사하는 모든 순간을 하나의 창에서.**
 
-[![CI](https://github.com/hslcrb/blueade/actions/workflows/ci.yml/badge.svg)](https://github.com/hslcrb/blueade/actions/workflows/ci.yml)
+![CI temporarily paused](https://img.shields.io/badge/CI-temporarily%20paused-9ca3af)
 [![MIT License](https://img.shields.io/badge/license-MIT-2c74de)](LICENSE)
 [![Electron](https://img.shields.io/badge/Electron-45-1b4db9)](https://www.electronjs.org/)
 
@@ -27,7 +27,7 @@ Bluade는 그 작고 성가신 순간들을 정리하는, **차분한 데스크�
 - 📈 **오른쪽**: 자세한 진행률, 처리량, 속도, 남은 시간, 로그, 결과 폴더 열기
 - 🎨 **아래 광고 영역**: 광고를 숨기거나 실제 콘텐츠인 척하지 않고 *"이곳은 / 광고입니다"*라고 명확히 표시하는 **자리표시자**. 현재 광고 추적 코드가 없어요.
 
-> **현재 v0.1.0은 실험적 소스 프리뷰입니다.** ZIP 중심 MVP이며 실제 Windows 설치파일은 CI 빌드가 성공한 후 `Actions`의 아티팩트에서 확인해야 합니다. 검증되지 않은 릴리스를 완성품인 척 배포하지 않아요.
+> **현재 v0.1.0은 실험적 소스 프리뷰입니다.** ZIP 중심 MVP입니다. 2026-10-25 유지관리자 요청으로 CI는 주석 처리하여 일시 정지했습니다. Linux 샌드박스에서 Windows 직접 빌드를 시도했으나 패키지/빌드 도구를 다운로드할 수 없어 **Windows 설치파일은 아직 생성되지 않았습니다.** 검증되지 않은 실행파일을 완성품인 척 배포하지 않아요.
 
 ## ✨ 무엇을 할 수 있나요?
 
@@ -62,7 +62,7 @@ npm install
 npm run dist:win
 ```
 
-성공하면 `dist/`에 설치 EXE와 포터블 ZIP이 만들어집니다. Windows 미서명 앱은 SmartScreen 경고가 발생할 수 있어요. GitHub Actions에서 자동으로 생성된 아티팩트는 [Actions · CI](https://github.com/hslcrb/blueade/actions/workflows/ci.yml)에서 확인합니다. 빌드가 실패했다면 실행파일은 생성되지 않은 것입니다. Linux에서 Windows 교차 빌드는 [빌드 가이드](docs/WINDOWS_BUILD.md)를 읽어주세요.
+성공하면 `dist/`에 설치 EXE와 포터블 ZIP이 만들어집니다. Windows 미서명 앱은 SmartScreen 경고가 발생할 수 있어요. 현재 CI는 주석화되어 **Actions에서 자동으로 설치파일을 생성하지 않습니다.** Linux에서 직접 Windows 교차 빌드를 시도한 근거와 차단 사유는 [빌드/검증 기록](docs/BUILD_AND_VALIDATION.md)에, 직접 빌드 방법은 [빌드 가이드](docs/WINDOWS_BUILD.md)에 정리했습니다. 설치파일은 실제 `dist/` 생성물로만 판단합니다.
 
 ## 🧭 1분 사용법
 
@@ -92,7 +92,7 @@ Bluade의 오픈소스 이니셔티브는 **Human × Agent**입니다.
 
 - 커밋은 `feat: 압축 미리보기 개선`처럼 **영어 접두어 + 한국어 메시지**를 사용해요.
 - 변경은 아주 작게 나누고 **커밋 즉시 푸시**해서 사고에도 코드를 잃지 않도록 합니다.
-- AI는 diff의 위험을 검토하지만 **사람의 승인으로 둔갑하지 않아요**. CI, AI 리뷰, 최신 SHA에 대한 관리자 승인, `safe-to-merge` 레이블을 통과해야 merge commit 방식(no-ff)으로 자동 병합되도록 설계했습니다.
+- AI는 diff의 위험을 검토하지만 **사람의 승인으로 둔갑하지 않아요**. CI, AI 리뷰, 최신 SHA에 대한 관리자 승인, `safe-to-merge` 레이블을 통과해야 merge commit 방식(no-ff)으로 자동 병합되도록 설계했습니다. **현재 CI가 중단되어 자동 병합도 안전상 차단됩니다.** CI를 다시 활성화하고 요구 검증을 충족하기 전에는 자동 병합을 성공으로 표시할 수 없습니다.
 - `BLUADE_AI_REVIEW_KEY`가 없다면 AI 검토는 실패-차단(fail closed)되며 자동 병합되지 않습니다. 설정 없이 AI 검토했다고 표시하지 않습니다.
 
 [CONTRIBUTING.md](CONTRIBUTING.md) · [AGENTS.md](AGENTS.md) · [아키텍처](docs/ARCHITECTURE.md) · [로드맵](docs/ROADMAP.md) · [행동 강령](CODE_OF_CONDUCT.md)
