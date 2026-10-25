@@ -5,7 +5,7 @@
 ## What was actually produced here
 
 - `npm run build:asar`: builds a deterministic Electron `app.asar` using only the local Node runtime and installed JSZip dependency. Includes app code, license-bearing JSZip dependencies, brand assets, and package.json. Includes SHA-256 metadata for each file, validated before publishing the artifact.
-- `npm run check`: seven tests including deterministic package creation and single-byte corruption detection.
+- `npm run check`: eight tests including deterministic package creation and single-byte corruption detection.
 - `/mnt/data/Bluade-v0.1.0-Electron-app-bundle.zip`: an *application bundle*, **not** an executable or a Windows installer.
 
 **This container cannot build a real `Bluade.exe`** with the current inputs. Its DNS resolution of `registry.npmjs.org`/`github.com` fails, and Electron, electron-builder, Wine, Windows SDK/MinGW and the Electron Windows runtime are not installed or cached. Attempting `npm run dist:win` fails with `electron-builder: not found`.
@@ -47,3 +47,18 @@ The PowerShell script does not modify the stock Electron icon or digitally sign 
 - CI remains fully commented out by request; the auto-merge gate must fail closed while CI is disabled.
 - The GitHub integration available to this session can write repository files and PRs, **but cannot create a GitHub Release or upload binary release assets**. Do not claim a GitHub Release was published through it.
 - The source and builder changes can be committed and merged; the local `app.asar` can be linked from the chat as a reproducible intermediate output.
+
+## Linux에서도 Windows 포터블 EXE를 조립할 수 있나요?
+
+**네.** 공식 Windows용 Electron 바이너리 ZIP을 이 작업 공간에 확보하기만 하면, Wine/electron-builder 없이도 **여기서** 직접 폴더형 Windows EXE를 조립할 수 있습니다.
+
+```bash
+# 1. 공식 ZIP을 dist/electron-v45.0.0-win32-x64.zip에 넣기
+npm run build:asar
+npm run build:win:portable:local
+# 결과: dist/Bluade-win32-x64/Bluade.exe
+# Windows 전체 폴더를 dist/Bluade-win32-x64.zip으로 압축하면 포터블 배포물
+(cd dist && zip -qr Bluade-win32-x64.zip Bluade-win32-x64)
+```
+
+`scripts/assemble-win32-from-zip.cjs`는 공식 ZIP 바이트 크기, GitHub 게시 SHA-256을 확인한 후 패키징합니다. 전제 조건인 원본 Electron ZIP이 이 세션에 없어서 이 조립 명령은 성공하지 못했습니다. 앱의 native Windows 동작을 검증하려면 Windows 기기에서 스모크 테스트가 추가로 필요합니다.
