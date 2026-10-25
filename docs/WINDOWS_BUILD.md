@@ -33,3 +33,7 @@ CI `.github/workflows/ci.yml`은 **2026-10-25 유지관리자 요청으로 전 �
 - 빌드 아티팩트 사용 전 실제 Windows UI 스모크 테스트
 
 이 개발 세션의 Linux 샌드박스에서는 `npm run dist:win` / 포터블 빌드 및 `npm install --offline`까지 직접 시도했습니다. `electron-builder: not found`, `ENOTCACHED`가 발생했고 Electron, Wine, Docker, x86_64 MinGW가 없어 `.exe`가 생성되지 않았습니다. 이는 **앱 코드 빌드 성공을 의미하지 않으며** `dist/`의 실제 파일로만 산출 여부를 확인합니다. 자세한 내용은 [검증 기록](BUILD_AND_VALIDATION.md)에 있습니다.
+
+## Dependency-free local Electron app bundle / 오프라인 중간 빌드
+
+`npm run build:asar` creates a fully verified `dist/app.asar` from already-installed runtime dependencies using Node's built-in modules, with no remote CI. It is **not** a Windows executable. See [direct packaging and verified Electron runtime assembly](OFFLINE_ELECTRON_BUNDLE.md). On Windows, `scripts/assemble-win32.ps1 -DownloadElectron` checks the official Electron 45.0.0 runtime's SHA-256 before assembling a portable `Bluade.exe` folder. This second stage cannot complete in the current network-isolated Linux environment.
