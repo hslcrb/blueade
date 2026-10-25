@@ -4,7 +4,8 @@
 - [x] Local ZIP compression (DEFLATE) / extraction / verification
 - [x] Drag & drop, per-file progress, cancellation request, speed and ETA
 - [x] Safe path handling, file count and size limits, no-overwrite extraction
-- [x] Cross-platform Windows build configuration, CI checks, agent protocol
+- [x] Windows build 설정 및 CI 워크플로 정의(현재 CI 전체 주석 처리), 에이전트 기여 규약
+- [ ] Electron/electron-builder 의존성 확보 후 실제 Windows EXE/ZIP 빌드 및 기기 검증
 - [ ] 실제 Windows PC 설치 / 압축·해제 / 대용량 부하 테스트
 - [ ] ZIP64, 큰 파일용 disk-backed reader, 긴 경로 대응
 - [ ] 타 포맷(TAR.GZ, 7z) 검토 및 암호화 ZIP 지원
